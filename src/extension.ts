@@ -27,13 +27,13 @@ let socketnapseAttachButton: vscode.StatusBarItem;
 let socketnapseAttachLogOutput: vscode.OutputChannel;
 let socketnapseExecuteLogOutput: vscode.OutputChannel;
 
+const statusText = (text: string, icon?: string) => `${icon ? `$(${icon})` : ''} Socket-napse: ${text}`;
+
 const recursiveExecuteOpen = () => {
   executeWS.open()
     .then()
     .catch(recursiveExecuteOpen);
 };
-
-const statusText = (text: string, icon?: string) => `${icon ? `$(${icon})` : ''} Socket-napse: ${text}`;
 
 const recursiveAttachOpen = () => {
   socketnapseStatus.text = statusText('Waiting for Synapse X...', 'loading~spin');
@@ -74,7 +74,7 @@ attachWS.onMessage.addListener((message) => {
       break;
 
     case 'READY':
-      socketnapseStatus.text = statusText('Attached!', 'check');
+      socketnapseStatus.text = statusText('Attached!', 'check-all');
       break;
 
     case 'ATTEMPTING':

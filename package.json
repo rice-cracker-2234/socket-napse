@@ -4,6 +4,7 @@
 	"description": "Use Synapse-X inside Visual Studio Code!",
 	"version": "0.0.1",
 	"license": "GPL-3.0-or-later",
+	"publisher": "rice-cracker-2234",
 	"repository": {
 		"type": "https",
 		"url": "https://github.com/rice-cracker-2234/socket-napse"
