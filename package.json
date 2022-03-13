@@ -3,6 +3,10 @@
 	"displayName": "Socket-napse",
 	"description": "Use Synapse-X inside Visual Studio Code!",
 	"version": "0.0.1",
+	"repository": {
+		"type": "https",
+		"url": "https://github.com/rice-cracker-2234/socket-napse"
+	},
 	"engines": {
 		"vscode": "^1.65.0"
 	},

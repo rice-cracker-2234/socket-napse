@@ -22,6 +22,8 @@ const executeWS = new WebSocket(executeUrl, wsConfig);
 const attachWS = new WebSocket(attachUrl, wsConfig);
 
 let socketnapseStatus: vscode.StatusBarItem;
+let socketnapseExecuteButton: vscode.StatusBarItem;
+let socketnapseAttachButton: vscode.StatusBarItem;
 let socketnapseAttachLogOutput: vscode.OutputChannel;
 let socketnapseExecuteLogOutput: vscode.OutputChannel;
 
@@ -31,10 +33,12 @@ const recursiveExecuteOpen = () => {
     .catch(recursiveExecuteOpen);
 };
 
+const statusText = (text: string, icon?: string) => `${icon ? `$(${icon})` : ''} Socket-napse: ${text}`;
+
 const recursiveAttachOpen = () => {
-  socketnapseStatus.text = 'Socketnapse: Waiting for Synapse X...';
+  socketnapseStatus.text = statusText('Waiting for Synapse X...', 'loading~spin');
   attachWS.open()
-    .then(() => { socketnapseStatus.text = 'Socketnapse: Connected!'; })
+    .then(() => { socketnapseStatus.text = statusText('Connected!', 'check'); })
     .catch(recursiveAttachOpen);
 };
 
@@ -58,31 +62,31 @@ attachWS.onMessage.addListener((message) => {
   socketnapseAttachLogOutput.appendLine(`Received: ${message}`);
   switch (message) {
     case 'INJECTING':
-      socketnapseStatus.text = 'Socketnapse: Attaching...';
+      socketnapseStatus.text = statusText('Attaching...', 'loading~spin');
       break;
 
     case 'CHECK_WL':
-      socketnapseStatus.text = 'Socketnapse: Checking whitelist...';
+      socketnapseStatus.text = statusText('Checking whitelist...', 'loading~spin');
       break;
 
     case 'SCANNING':
-      socketnapseStatus.text = 'Socketnapse: Scanning...';
+      socketnapseStatus.text = statusText('Scanning...', 'loading~spin');
       break;
 
     case 'READY':
-      socketnapseStatus.text = 'Socketnapse: Attached!';
+      socketnapseStatus.text = statusText('Attached!', 'check');
       break;
 
     case 'ATTEMPTING':
-      socketnapseStatus.text = 'Socketnapse: Attempting...';
+      socketnapseStatus.text = statusText('Attempting...', 'loading~spin');
       break;
 
     case 'FAILED_TO_FIND':
-      socketnapseStatus.text = 'Socketnapse: Failed to find Roblox!';
+      socketnapseStatus.text = statusText('Failed to find Roblox!', 'loading~spin');
       break;
 
     default:
-      socketnapseStatus.text = `Socketnapse: Unknown (${message})`;
+      socketnapseStatus.text = statusText(`Unknown message (${message})`, 'warning');
       break;
   }
 });
@@ -103,6 +107,18 @@ export function activate(context: vscode.ExtensionContext) {
   socketnapseStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
   context.subscriptions.push(socketnapseStatus);
   socketnapseStatus.show();
+
+  socketnapseExecuteButton = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
+  context.subscriptions.push(socketnapseExecuteButton);
+  socketnapseExecuteButton.text = '$(triangle-right) Execute';
+  socketnapseExecuteButton.command = 'socket-napse.executeScript';
+  socketnapseExecuteButton.show();
+
+  socketnapseAttachButton = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
+  context.subscriptions.push(socketnapseAttachButton);
+  socketnapseAttachButton.text = '$(bug) Attach';
+  socketnapseAttachButton.command = 'socket-napse.attachRoblox';
+  socketnapseAttachButton.show();
 
   socketnapseAttachLogOutput = vscode.window.createOutputChannel('Socketnapse Attach Log');
   context.subscriptions.push(socketnapseAttachLogOutput);
