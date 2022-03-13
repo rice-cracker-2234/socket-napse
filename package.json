@@ -2,7 +2,7 @@
 	"name": "socket-napse",
 	"displayName": "Socket-napse",
 	"description": "Use Synapse-X inside Visual Studio Code!",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"license": "GPL-3.0-or-later",
 	"publisher": "rice-cracker-2234",
 	"icon": "assets/SocketNapseIconSmall.png",
