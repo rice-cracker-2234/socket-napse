@@ -84,7 +84,7 @@ attachWS.onMessage.addListener((message) => {
       break;
 
     case 'FAILED_TO_FIND':
-      statusText('Failed to find Roblox!', 'loading~spin');
+      statusText('Failed to find Roblox!', 'error');
       break;
 
     case 'ALREADY_ATTACHED':
