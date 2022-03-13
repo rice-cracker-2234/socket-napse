@@ -27,7 +27,9 @@ let socketnapseAttachButton: vscode.StatusBarItem;
 let socketnapseAttachLogOutput: vscode.OutputChannel;
 let socketnapseExecuteLogOutput: vscode.OutputChannel;
 
-const statusText = (text: string, icon?: string) => `${icon ? `$(${icon})` : ''} Socket-napse: ${text}`;
+const statusText = (text: string, icon?: string) => {
+  socketnapseStatus.text = `${icon ? `$(${icon})` : ''} Socket-napse: ${text}`;
+};
 
 const recursiveExecuteOpen = () => {
   executeWS.open()
@@ -36,9 +38,9 @@ const recursiveExecuteOpen = () => {
 };
 
 const recursiveAttachOpen = () => {
-  socketnapseStatus.text = statusText('Waiting for Synapse X...', 'loading~spin');
+  statusText('Waiting for Synapse X...', 'loading~spin');
   attachWS.open()
-    .then(() => { socketnapseStatus.text = statusText('Connected!', 'check'); })
+    .then(() => statusText('Connected!', 'check'))
     .catch(recursiveAttachOpen);
 };
 
@@ -62,31 +64,35 @@ attachWS.onMessage.addListener((message) => {
   socketnapseAttachLogOutput.appendLine(`Received: ${message}`);
   switch (message) {
     case 'INJECTING':
-      socketnapseStatus.text = statusText('Attaching...', 'loading~spin');
+      statusText('Attaching...', 'loading~spin');
       break;
 
     case 'CHECK_WL':
-      socketnapseStatus.text = statusText('Checking whitelist...', 'loading~spin');
+      statusText('Checking whitelist...', 'loading~spin');
       break;
 
     case 'SCANNING':
-      socketnapseStatus.text = statusText('Scanning...', 'loading~spin');
+      statusText('Scanning...', 'loading~spin');
       break;
 
     case 'READY':
-      socketnapseStatus.text = statusText('Attached!', 'check-all');
+      statusText('Attached!', 'check-all');
       break;
 
     case 'ATTEMPTING':
-      socketnapseStatus.text = statusText('Attempting...', 'loading~spin');
+      statusText('Attempting...', 'loading~spin');
       break;
 
     case 'FAILED_TO_FIND':
-      socketnapseStatus.text = statusText('Failed to find Roblox!', 'loading~spin');
+      statusText('Failed to find Roblox!', 'loading~spin');
+      break;
+
+    case 'ALREADY_ATTACHED':
+      statusText('Already attached!', 'check-all');
       break;
 
     default:
-      socketnapseStatus.text = statusText(`Unknown message (${message})`, 'warning');
+      statusText(`Unknown message (${message})`, 'warning');
       break;
   }
 });
