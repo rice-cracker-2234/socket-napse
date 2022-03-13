@@ -5,7 +5,7 @@
 	"version": "0.0.1",
 	"license": "GPL-3.0-or-later",
 	"publisher": "rice-cracker-2234",
-	"icon": "./assets/SocketNapseIconSmall.png",
+	"icon": "assets/SocketNapseIconSmall.png",
 	"repository": {
 		"type": "https",
 		"url": "https://github.com/rice-cracker-2234/socket-napse"
