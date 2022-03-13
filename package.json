@@ -1,0 +1,78 @@
+{
+	"name": "socket-napse",
+	"displayName": "Socket-napse",
+	"description": "Use Synapse-X inside Visual Studio Code!",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.65.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"*"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "socket-napse.executeScript",
+				"title": "Execute Script",
+				"category": "Socket-napse"
+			},
+			{
+				"command": "socket-napse.attachRoblox",
+				"title": "Attach to Roblox",
+				"category": "Socket-napse"
+			},
+			{
+				"command": "socket-napse.openSynapseX",
+				"title": "Open Synapse X",
+				"category": "Socket-napse"
+			},
+			{
+				"command": "socket-napse.killRoblox",
+				"title": "Kill Roblox",
+				"category": "Socket-napse"
+			}
+		],
+		"configuration": {
+			"title": "Socket-napse",
+			"properties": {
+				"socket-napse.synapseX.executablePath": {
+					"type": "string",
+					"description": "Path to Synapse X executable"
+				}
+			}
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "yarn run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "yarn run compile && yarn run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/glob": "^7.2.0",
+		"@types/mocha": "^9.1.0",
+		"@types/node": "14.x",
+		"@types/vscode": "^1.65.0",
+		"@types/websocket": "^1.0.5",
+		"@typescript-eslint/eslint-plugin": "^5.12.1",
+		"@typescript-eslint/parser": "^5.12.1",
+		"@vscode/test-electron": "^2.1.2",
+		"eslint": "^8.9.0",
+		"eslint-config-airbnb": "^19.0.4",
+		"eslint-config-airbnb-typescript": "^16.1.1",
+		"eslint-plugin-import": "^2.25.4",
+		"glob": "^7.2.0",
+		"mocha": "^9.2.1",
+		"typescript": "^4.5.5"
+	},
+	"dependencies": {
+		"websocket": "^1.0.34",
+		"websocket-as-promised": "^2.0.1"
+	}
+}
