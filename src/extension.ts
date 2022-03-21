@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
@@ -8,7 +9,7 @@ import { exec, execFile } from 'child_process';
 import { dirname } from 'path';
 
 const wsConfig: Options = {
-  createWebSocket: (url) => new W3C(url),
+  createWebSocket: (url:string) => new W3C(url),
   connectionTimeout: 10000,
 };
 
@@ -16,19 +17,18 @@ const baseUrl = 'ws://localhost:24892/';
 const executeUrl = `${baseUrl}execute`;
 const attachUrl = `${baseUrl}attach`;
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 const executeWS = new WebSocket(executeUrl, wsConfig);
 const attachWS = new WebSocket(attachUrl, wsConfig);
 
 let socketnapseStatus: vscode.StatusBarItem;
 let socketnapseExecuteButton: vscode.StatusBarItem;
+let socketnapseOpenButton: vscode.StatusBarItem;
 let socketnapseAttachButton: vscode.StatusBarItem;
 let socketnapseAttachLogOutput: vscode.OutputChannel;
 let socketnapseExecuteLogOutput: vscode.OutputChannel;
 
 const statusText = (text: string, icon?: string) => {
-  socketnapseStatus.text = `${icon ? `$(${icon})` : ''} Socket-napse: ${text}`;
+  socketnapseStatus.text = `${icon ? `$(${icon})` : ''} Synapse: ${text}`;
 };
 
 const recursiveExecuteOpen = () => {
@@ -44,23 +44,23 @@ const recursiveAttachOpen = () => {
     .catch(recursiveAttachOpen);
 };
 
-executeWS.onMessage.addListener((message) => {
+executeWS.onMessage.addListener((message:string) => {
   socketnapseExecuteLogOutput.appendLine(`Received: ${message}`);
   switch (message) {
     case 'NOT_READY':
-      vscode.window.showErrorMessage('You haven\'t attached to a Roblox process!');
+      statusText('Not attached!');
       break;
 
     case 'OK':
-      vscode.window.showInformationMessage('Script executed!');
+      statusText('Executed!');
       break;
 
     default:
-      vscode.window.showWarningMessage(`Unknown message: ${message}`);
+      statusText(`${message}`);
   }
 });
 
-attachWS.onMessage.addListener((message) => {
+attachWS.onMessage.addListener((message:string) => {
   socketnapseAttachLogOutput.appendLine(`Received: ${message}`);
   switch (message) {
     case 'INJECTING':
@@ -92,7 +92,7 @@ attachWS.onMessage.addListener((message) => {
       break;
 
     default:
-      statusText(`Unknown message (${message})`, 'warning');
+      statusText(`${message}`, 'warning');
       break;
   }
 });
@@ -101,18 +101,15 @@ executeWS.onClose.addListener(recursiveExecuteOpen);
 attachWS.onClose.addListener(recursiveAttachOpen);
 
 export function activate(context: vscode.ExtensionContext) {
-  // Use the console to output diagnostic information (console.log) and errors (console.error)
-  // This line of code will only be executed once when your extension is activated
-  console.log('Congratulations, your extension "socket-napse" is now active!');
-
-  // The command has been defined in the package.json file
-  // Now provide the implementation of the command with registerCommand
-  // The commandId parameter must match the command field in package.json
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-
   socketnapseStatus = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
   context.subscriptions.push(socketnapseStatus);
   socketnapseStatus.show();
+
+  socketnapseOpenButton = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+  context.subscriptions.push(socketnapseOpenButton);
+  socketnapseOpenButton.text = '$(window) Open Synapse X';
+  socketnapseOpenButton.command = 'socket-napse.openSynapseX';
+  socketnapseOpenButton.show();
 
   socketnapseExecuteButton = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
   context.subscriptions.push(socketnapseExecuteButton);
@@ -122,7 +119,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   socketnapseAttachButton = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
   context.subscriptions.push(socketnapseAttachButton);
-  socketnapseAttachButton.text = '$(bug) Attach';
+  socketnapseAttachButton.text = '$(plug) Attach';
   socketnapseAttachButton.command = 'socket-napse.attachRoblox';
   socketnapseAttachButton.show();
 
